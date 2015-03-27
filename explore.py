@@ -21,6 +21,7 @@ def main():
     parser = argparse.ArgumentParser(description='Explore GPX data.')
 
     parser.add_argument('-T', '--top', action='store_true', help='show top-level fields (default: %(default)d)')
+    parser.add_argument('-t', '--track', action='store_true', help='show track metadata (default: %(default)d)')
 
     parser.add_argument('file', nargs='+', help='a .gpx file to explore')
     args = parser.parse_args()
@@ -32,6 +33,11 @@ def main():
                 if args.top:
                     if child.tag not in prefix(['trk', 'wpt']):
                         ET.dump(child)
+                if args.track:
+                    if child.tag in prefix(['trk']):
+                        for subchild in child:
+                            if subchild.tag not in prefix(['name', 'trkseg']):
+                                ET.dump(subchild)
 
 
 
