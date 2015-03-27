@@ -22,6 +22,7 @@ def main():
 
     parser.add_argument('-T', '--top', action='store_true', help='show top-level fields (default: %(default)d)')
     parser.add_argument('-t', '--track', action='store_true', help='show track metadata (default: %(default)d)')
+    parser.add_argument('-w', '--waypoint', action='store_true', help='show waypoint metadata (default: %(default)d)')
 
     parser.add_argument('file', nargs='+', help='a .gpx file to explore')
     args = parser.parse_args()
@@ -38,7 +39,11 @@ def main():
                         for subchild in child:
                             if subchild.tag not in prefix(['name', 'trkseg']):
                                 ET.dump(subchild)
-
+                if args.waypoint:
+                    if child.tag in prefix(['wpt']):
+                        for subchild in child:
+                            if subchild.tag not in prefix(['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime'):
+                                ET.dump(subchild)
 
 
 if __name__ == "__main__":
