@@ -42,7 +42,7 @@ def main():
                 if args.waypoint:
                     if child.tag in prefix(['wpt']):
                         for subchild in child:
-                            if subchild.tag not in prefix(['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime'):
+                            if subchild.tag not in prefix(['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime']):
                                 ET.dump(subchild)
 
 
