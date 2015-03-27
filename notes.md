@@ -12,11 +12,14 @@ Top-level metadata
 No pertinent info here
 Geometry sub-elements: trk, wpt
 
+one `<bin>` element with base64-encoded binary data
+
 Track metadata
 --------------
 
-Relevant fields: name
+Relevant fields: name, desc
 Time comes from individual points
+desc is sometimes date, sometimes a useful description
 
 Waypoint metadata
 -----------------
