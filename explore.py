@@ -35,6 +35,7 @@ def main():
     parser.add_argument('-T', '--top', action='store_true', help='show top-level fields (default: %(default)d)')
     parser.add_argument('-t', '--track', action='store_true', help='show track metadata (default: %(default)d)')
     parser.add_argument('-w', '--waypoint', action='store_true', help='show waypoint metadata (default: %(default)d)')
+    parser.add_argument('-s', '--segment', action='store_true', help='show track segment metadata (default: %(default)d)')
 
     parser.add_argument('file', nargs='+', help='a .gpx file to explore')
     args = parser.parse_args()
@@ -51,6 +52,10 @@ def main():
                         dump_subchildren(child, ['trk'], ['name', 'trkseg'])
                     if args.waypoint:
                         dump_subchildren(child, ['wpt'], ['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime'])
+                    if args.segment:
+                        if child.tag in prefix(['trk']):
+                            for subchild in child:
+                                dump_subchildren(subchild, ['trkseg'], ['trkpt'])
 
             except Exception:
                 print('Error: could not parse {}'.format(infile), file=sys.stderr)
