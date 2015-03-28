@@ -19,6 +19,16 @@ def prefix(tags):
             yield prefix + tag
 
 
+def dump_excluding(element, exclude):
+    if element.tag not in prefix(exclude):
+        ET.dump(element)
+
+
+def dump_subchildren(element, include, exclude):
+    if element.tag in prefix(include):
+        for child in element:
+            dump_excluding(child, exclude)
+
 def main():
     parser = argparse.ArgumentParser(description='Explore GPX data.')
 
@@ -36,18 +46,11 @@ def main():
                 
                 for child in root:
                     if args.top:
-                        if child.tag not in prefix(['trk', 'wpt']):
-                            ET.dump(child)
+                        dump_excluding(child, ['trk', 'wpt'])
                     if args.track:
-                        if child.tag in prefix(['trk']):
-                            for subchild in child:
-                                if subchild.tag not in prefix(['name', 'trkseg']):
-                                    ET.dump(subchild)
+                        dump_subchildren(child, ['trk'], ['name', 'trkseg'])
                     if args.waypoint:
-                        if child.tag in prefix(['wpt']):
-                            for subchild in child:
-                                if subchild.tag not in prefix(['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime']):
-                                    ET.dump(subchild)
+                        dump_subchildren(child, ['wpt'], ['ele', 'time', 'name', 'desc', 'cmt', 'lat', 'lon', 'ltime'])
 
             except Exception:
                 print('Error: could not parse {}'.format(infile), file=sys.stderr)
